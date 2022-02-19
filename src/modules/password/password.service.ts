@@ -1,4 +1,5 @@
 import {
+	ConflictException,
 	BadRequestException,
 	HttpStatus,
 	Injectable,
@@ -73,6 +74,9 @@ export class PasswordService {
 	): Promise<PasswordManager.ReturnType<boolean>> {
 		const getUser = await this.userModel.findOne({ id: user.id });
 		if (!getUser) throw new NotFoundException("user not found");
+
+		const getPassword = await this.passwordModel.findOne({ name: field.name });
+		if(getPassword) throw new ConflictException("This password is already registered");
 
 		const id = this.snowflake.generate();
 		const password = new this.passwordModel({
