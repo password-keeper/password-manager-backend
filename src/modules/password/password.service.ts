@@ -75,7 +75,7 @@ export class PasswordService {
 		const getUser = await this.userModel.findOne({ id: user.id });
 		if (!getUser) throw new NotFoundException("user not found");
 
-		const getPassword = await this.passwordModel.findOne({ id: user.id, name: field.name });
+		const getPassword = await this.passwordModel.findOne({ user: user.id, name: field.name });
 		if(getPassword) throw new ConflictException("This password is already registered");
 
 		const id = this.snowflake.generate();
